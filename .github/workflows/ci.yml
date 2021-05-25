@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Find Yarn Cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: ${{ runner.OS }}-yarn-
+      - name: Run yarn
+        run: yarn
+      - name: Find linting Cache
+        uses: actions/cache@v1
+        with:
+          path: cache
+          key: ${{ runner.OS }}-lintingcache-${{ hashFiles('yarn.lock')}}
+          restore-keys: ${{ runner.OS }}-lintingcache-
+      - name: Check ESLint
+        run: yarn lint:cache
+      - name: Check code style
+        run: yarn format:prettier
+      - name: Check typescript
+        run: yarn lint:types
+
+  test:
+    needs: [lint]
+    name: Test
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Find Yarn Cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: ${{ runner.OS }}-yarn-
+      - name: Run yarn
+        run: yarn
+      - name: Run unit test
+        run: yarn test --coverage
+      - name: Upload code coverage to artifects
+        uses: actions/upload-artifact@v1
+        if: matrix.OS == 'ubuntu-latest'
+        with:
+          name: coverage
+          path: coverage
+
+  upload-code-coverage:
+    needs: [lint, test]
+    name: Upload code coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Download coverage artifects
+        uses: actions/download-artifact@v1
+        with:
+          name: coverage
+      - uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/**/*
+          flags: unittests

@@ -1,0 +1,51 @@
+{
+  "name": "find-unused-types",
+  "version": "1.0.0",
+  "description": "Find unnecessary @types in package.json",
+  "main": "index.js",
+  "scripts": {
+    "clean:build": "rimraf dist",
+    "clean:cache": "rimraf cache",
+    "build": "yarn clean:build && tsc --project tsconfig.build.json",
+    "test": "jest --ci",
+    "lint": "eslint \"src/**/*.ts\"",
+    "lint:types": "tsc --project tsconfig.check.json",
+    "format:prettier": "prettier --check \"src/**/*.ts\"",
+    "codecov": "codecov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fa93hws/find-unused-types.git"
+  },
+  "keywords": [
+    "typescript"
+  ],
+  "author": "fa93hws",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fa93hws/find-unused-types/issues"
+  },
+  "homepage": "https://github.com/fa93hws/find-unused-types#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.6.1",
+    "@typescript-eslint/eslint-plugin": "^4.25.0",
+    "@typescript-eslint/experimental-utils": "^4.25.0",
+    "@typescript-eslint/parser": "^4.25.0",
+    "@typescript-eslint/typescript-estree": "^4.25.0",
+    "codecov": "^3.8.2",
+    "eslint": "^7.27.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-jest": "^24.3.6",
+    "jest": "^26.6.3",
+    "prettier": "^2.3.0",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.5.6",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "yargs": "^17.0.1"
+  }
+}

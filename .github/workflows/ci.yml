@@ -21,7 +21,7 @@ jobs:
       - name: Run yarn
         run: yarn
       - name: Check ESLint
-        run: yarn lint:cache
+        run: yarn lint
       - name: Check code style
         run: yarn format:prettier
       - name: Check typescript

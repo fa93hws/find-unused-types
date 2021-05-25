@@ -12,22 +12,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      - name: Find Yarn Cache
+      - name: Find npm Cache
         uses: actions/cache@v1
         with:
           path: node_modules
-          key: ${{ runner.OS }}-yarn-${{ hashFiles('yarn.lock') }}
-          restore-keys: ${{ runner.OS }}-yarn-
-      - name: Run yarn
-        run: yarn
+          key: ${{ runner.OS }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: ${{ runner.OS }}-npm-
+      - name: Run npm
+        run: npm install
       - name: Check ESLint
-        run: yarn lint
+        run: npm run lint
       - name: Check code style
-        run: yarn format:prettier
+        run: npm run format:prettier
       - name: Check typescript
-        run: yarn lint:types
+        run: npm run lint:types
       - name: Run unit test
-        run: yarn test --coverage
+        run: npm run test --coverage
       - uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
